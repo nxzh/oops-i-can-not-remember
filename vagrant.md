@@ -9,4 +9,5 @@
 `vagrant vbguest --do install`
 
 ### vagrant install proxy
-vagrant plugin install vagrant-proxyconf
+
+`vagrant plugin install vagrant-proxyconf`
