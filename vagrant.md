@@ -44,4 +44,4 @@
     vboxmanage clonehd new-virtualdisk.vdi resized.vmdk --format vmdk
     mv resized.vmdk centos-7-1-1.x86_64.vmdk
     rm new-virtualdisk.vdi
-    vboxmanage internalcommands sethduuid centos-7-1-1.x86_64.vmdk 439b5828-b414-4044-b38b-bf3d92641bdb
+    vboxmanage internalcommands sethduuid centos-7-1-1.x86_64.vmdk <old_uuid>
