@@ -35,3 +35,13 @@
     d.vm.provision "docker" do |dk|
     end
     
+### Virtualbox extend disk capacity
+
+    vagrant halt
+    vboxmanage showhdinfo centos-7-1-1.x86_64.vmdk
+    vboxmanage clonehd centos-7-1-1.x86_64.vmdk new-virtualdisk.vdi --format vdi
+    vboxmanage modifyhd new-virtualdisk.vdi --resize 192000
+    vboxmanage clonehd new-virtualdisk.vdi resized.vmdk --format vmdk
+    mv resized.vmdk centos-7-1-1.x86_64.vmdk
+    rm new-virtualdisk.vdi
+    vboxmanage internalcommands sethduuid centos-7-1-1.x86_64.vmdk 439b5828-b414-4044-b38b-bf3d92641bdb
