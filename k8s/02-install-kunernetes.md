@@ -117,7 +117,7 @@ Auto complete:
         kube-system   kube-proxy-t8jd7                     1/1     Running   0          2m2s
         kube-system   kube-scheduler-k8s-master            1/1     Running   0          3m6s
 
-或者显示更全信息:
+or display detail infor:
 
         kubectl get pods --all-namespaces -o wide 
 
