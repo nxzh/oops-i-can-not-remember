@@ -1,0 +1,58 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  config.vm.define "master" do |master|
+    master.vm.box = "centos/7"
+    master.vm.hostname = "k8s-master"
+    master.vm.network "private_network", ip: "192.168.50.100", virtualbox__intnet: true
+    master.vm.provider "virtualbox" do |vb|
+      vb.memory = "4096"
+      vb.name = "k8s-master"
+      vb.customize ["modifyvm", :id, "--cpus", 2]
+    end
+    master.vm.provision "docker" do |d|
+    end
+  end
+
+  config.vm.define "node1" do |node1|
+    node1.vm.box = "centos/7"
+    node1.vm.hostname = "k8s-node1"
+    node1.vm.network "private_network", ip: "192.168.50.101", virtualbox__intnet: true
+    node1.vm.provider "virtualbox" do |vb|
+      vb.memory = "4096"
+      vb.name = "k8s-node1"
+      vb.customize ["modifyvm", :id, "--cpus", 2]
+    end
+    node1.vm.provision "docker" do |d|
+    end
+  end
+
+  config.vm.define "node2" do |node2|
+    node2.vm.box = "centos/7"
+    node2.vm.hostname = "k8s-node2"
+    node2.vm.network "private_network", ip: "192.168.50.101", virtualbox__intnet: true
+    node2.vm.provider "virtualbox" do |vb|
+      vb.memory = "4096"
+      vb.name = "k8s-node2"
+      vb.customize ["modifyvm", :id, "--cpus", 2]
+    end
+    node2.vm.provision "docker" do |d|
+    end
+  end
+
+  config.vm.define "nfs" do |nfs|
+    nfs.vm.box = "centos/7"
+    nfs.vm.hostname = "nfs"
+    nfs.vm.network "private_network", ip: "192.168.50.101", virtualbox__intnet: true
+    nfs.vm.provider "virtualbox" do |vb|
+      vb.memory = "4096"
+      vb.name = "nfs"
+      vb.customize ["modifyvm", :id, "--cpus", 2]
+    end
+    nfs.vm.provision "docker" do |d|
+    end
+  end
+
+end
