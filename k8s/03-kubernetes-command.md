@@ -4,7 +4,11 @@
 
 ### Check namespace
 
-    kubectl get namespaces
+        kubectl get namespaces
+
+### Check api versions
+
+        kubectl api-versions
 
 
 ## Start deployment
@@ -23,6 +27,10 @@
         NAME                        READY   STATUS    RESTARTS   AGE
         httpd-app-f9ccf4675-2jb6c   1/1     Running   0          11m
         httpd-app-f9ccf4675-pp9n7   1/1     Running   0          11m
+
+Or more information:
+        
+        kubectl get pod -o wide
 
 ### Check Pod details
 
@@ -133,3 +141,52 @@
 ### Delete Deployment
 
         kubectl delete deployments/httpd-app
+
+## Label
+
+Add new label for node:
+
+        kubectl label node k8s-node1 disktype=ssd
+
+Check label of the node:
+
+        kubectl get node --show-labels
+
+Delete label from node:
+
+        kubectl label node k8s-node1 disktype-
+
+
+## DaemonSet
+
+Check daemon set:
+        
+        kubectl get daemonset --namespace=kube-system
+
+Delete daemon set:
+
+        kubectl delete daemonset xxxxxxx
+
+Or by file:
+
+        kubectl delete -f node_exporter.yml
+
+## Job
+
+Check job status:
+
+        kubectl get job
+
+To check pod with status is `Completed`, use:
+
+        kubectl get pod --show-all
+
+Delete Job:
+
+        kubectl delete -f nginx.yml
+
+## Log
+
+Check Pod std log:
+
+        kubectl logs POD_NAME
