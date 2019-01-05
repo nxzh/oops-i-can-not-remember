@@ -121,6 +121,15 @@
         ----    ------             ----  ----                   -------
         Normal  ScalingReplicaSet  14m   deployment-controller  Scaled up replica set httpd-app-f9ccf4675 to 2
 
+### Check Replicas
+
+        kubectl get replicaset
+
+### Check Replicas details
+
+        kubectl describe replicaset
+
+
 ### Delete Deployment
 
         kubectl delete deployments/httpd-app
