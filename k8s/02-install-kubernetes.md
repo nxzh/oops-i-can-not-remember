@@ -28,13 +28,32 @@
 ### Enable br_netfilter
 
         modprobe br_netfilter
-        echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables
+        echo 'net.bridge.bridge-nf-call-iptables = 1'>>/etc/sysctl.conf
+        echo 'net.bridge.bridge-nf-call-ip6tables = 1'>>/etc/sysctl.conf
+        sysctl -p
+
+        echo "net.ipv4.ip_forward = 1">>/etc/sysctl.conf
+        sysctl -p
 
 ### Install Docker-CE (Skip if vagrant has already installed)
 
+        yum makecache fast
         yum install -y yum-utils device-mapper-persistent-data lvm2
         yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
         yum install -y docker-ce
+
+        systemctl enable docker
+        systemctl start docker
+
+        sudo iptables -P FORWARD ACCEPT
+        mkdir -p /etc/systemd/system/docker.service.d
+
+
+        vi /etc/systemd/system/docker.service.d/port.conf
+        ExecStartPost=/usr/sbin/iptables -P FORWARD ACCEPT
+
+        systemctl daemon-reload
+        systemctl restart docker
 
 ## Install Kubernetes
 
@@ -76,7 +95,7 @@ Reload systemd:
 
 ### Initialize the Kubernetes cluster (on master)
 
-    kubeadm init --apiserver-advertise-address=192.168.50.100 --pod-network-cidr=10.244.0.0/16
+    kubeadm init --apiserver-advertise-address=192.168.50.100 --pod-network-cidr=10.244.0.0/16 –-token-ttl=0
 
 
 ### Config kubectl (on master)
@@ -92,7 +111,25 @@ Auto complete:
 
 ### Install Pod network (on master)
 
-        kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+        wget https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+        
+        vi kube-flannel.yml
+
+Find and add `--iface=eth1` under flannel:v0.10.0-amd64:
+
+        containers:
+              - name: kube-flannel
+                image: quay.io/coreos/flannel:v0.10.0-amd64
+                command:
+                - /opt/bin/flanneld
+                args:
+                - --ip-masq
+                - --kube-subnet-mgr
+                - --iface=eth1
+
+
+
+        kubectl apply -f kube-flannel.yml
 
 ### Add node1 and node2 (on node1 and node2)
 
@@ -134,6 +171,22 @@ or display detail infor:
         kube-system   kube-proxy-qznhg                     1/1     Running   0          9m28s   10.0.2.15    k8s-node2    <none>           <none>
         kube-system   kube-proxy-t8jd7                     1/1     Running   0          9m31s   10.0.2.15    k8s-node1    <none>           <none>
         kube-system   kube-scheduler-k8s-master            1/1     Running   0          10m     10.0.2.15    k8s-master   <none>           <none>
+
+
+## Test DNS (on master)
+
+        kubectl run curl --image=radial/busyboxplus:curl -i --tty
+
+        If you don't see a command prompt, try pressing enter.
+        [ root@curl-87b54756-vsf2s:/ ]$ 
+
+        [ root@curl-87b54756-vsf2s:/ ]$ nslookup kubernetes.default
+        Server:    10.96.0.10
+        Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
+
+        Name:      kubernetes.default
+        Address 1: 10.96.0.1 kubernetes.default.svc.cluster.local
+
 
 ## Summary
 
