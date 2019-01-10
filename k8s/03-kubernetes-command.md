@@ -190,3 +190,18 @@ Delete Job:
 Check Pod std log:
 
         kubectl logs POD_NAME
+
+
+## Service
+
+Check Service status:
+
+        kubectl get service
+
+Check service detail info:
+
+        kubectl describe service httpd-svc
+
+Delete service:
+
+        kubectl delete -f httpd-svc.yml
