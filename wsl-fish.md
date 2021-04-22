@@ -4,6 +4,8 @@ brew install fish
 
 mkdir -p ~/.config/fish
 
+vim ~/.config/fish/config.fish
+
 set -x HOMEBREW_PREFIX /home/linuxbrew/.linuxbrew
 set -x HOMEBREW_CELLAR /home/linuxbrew/.linuxbrew/Cellar
 set -x HOMEBREW_REPOSITORY /home/linuxbrew/.linuxbrew/Homebrew
